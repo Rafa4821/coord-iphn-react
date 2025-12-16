@@ -1,0 +1,21 @@
+.status-bar {
+  background-color: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 12px 20px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.coords-display {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.coords-display strong {
+  font-weight: 700;
+  color: var(--primary-color);
+}
