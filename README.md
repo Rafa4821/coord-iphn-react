@@ -1,6 +1,6 @@
-# 📱 Coordenadas iPhone - Herramienta de Extracción de Coordenadas
+# 📱 Coordenadas Móviles - Herramienta de Extracción de Coordenadas
 
-Una herramienta profesional y moderna para extraer coordenadas táctiles de screenshots de aplicaciones móviles, diseñada para automatización de pruebas con Appium. Soporta todos los modelos de iPhone desde SE hasta iPhone 16 Pro Max.
+Una herramienta profesional y moderna para extraer coordenadas táctiles de screenshots de aplicaciones móviles, diseñada para automatización de pruebas con Appium. Soporta **iPhone** (SE hasta 16 Pro Max) y **Samsung Galaxy** (A54, A55, A56, S20).
 
 ![React](https://img.shields.io/badge/React-19.2.0-61DAFB?style=flat&logo=react)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.2-7952B3?style=flat&logo=bootstrap)
@@ -8,10 +8,19 @@ Una herramienta profesional y moderna para extraer coordenadas táctiles de scre
 
 ## ✨ Características
 
-- 🖼️ **Carga de Imágenes**: Sube screenshots directamente desde tu dispositivo
+### 📥 Carga de Imágenes (3 formas)
+- 🖼️ **Botón de Carga**: Sube screenshots desde tu dispositivo
+- 🖱️ **Drag & Drop**: Arrastra y suelta imágenes directamente
+- 📋 **Pegar desde Portapapeles**: Usa Ctrl+V (Cmd+V en Mac) para pegar capturas
+
+### 🎯 Funcionalidades Principales
 - ✂️ **Recorte de Imágenes**: Herramienta integrada para recortar áreas específicas
+- 🗑️ **Borrar Imagen**: Botón para limpiar la imagen y empezar de nuevo
 - 🎯 **Captura de Coordenadas**: Haz clic en cualquier punto de la imagen para obtener coordenadas precisas
-- 📱 **Soporte Multi-Dispositivo**: 24 modelos de iPhone (SE hasta iPhone 16 Pro Max)
+- 📱 **Soporte Multi-Dispositivo**: 24 modelos iPhone + 4 modelos Samsung Galaxy
+- 🔄 **Selector de Marca**: Tabs interactivos para cambiar entre iPhone y Samsung
+- ⚙️ **Resolución Personalizada**: Ingresa width/height manualmente para cualquier dispositivo
+- 🔄 **Sobreescritura Automática**: Pega/arrastra nueva imagen para reemplazar la actual
 - 🎨 **Simulador de Gestos**: Crea gestos de swipe y flick interactivamente
 - 🌙 **Modo Oscuro**: Interfaz adaptable con tema claro/oscuro
 - 📋 **Gestión de Coordenadas**: Lista completa de todas las coordenadas capturadas
@@ -48,26 +57,54 @@ La aplicación estará disponible en `http://localhost:5173`
 
 ## 📖 Uso
 
-### 1. Cargar Imagen
+### 1. Cargar Imagen (3 Métodos)
+
+#### Método 1: Botón de Carga
 - Haz clic en el botón **"Cargar Imagen"**
 - Selecciona un screenshot de tu aplicación móvil
 
-### 2. Recortar (Opcional)
+#### Método 2: Drag & Drop 🖱️
+- Arrastra una imagen desde tu explorador de archivos
+- Suéltala en cualquier parte de la aplicación
+- Verás un overlay azul indicando la zona de drop
+
+#### Método 3: Pegar desde Portapapeles 📋
+- Toma una captura de pantalla (Windows: `Win+Shift+S`, Mac: `Cmd+Shift+4`)
+- En la aplicación, presiona `Ctrl+V` (Windows) o `Cmd+V` (Mac)
+- La imagen se cargará automáticamente
+
+### 2. Seleccionar Dispositivo
+
+#### Opción A: Dispositivos Predefinidos
+- Usa los tabs 🍎 **iPhone** o 📱 **Samsung** para elegir la marca
+- Selecciona el modelo específico del dropdown
+- Las coordenadas se calcularán según el dispositivo elegido
+
+#### Opción B: Resolución Personalizada ⚙️
+- Marca el checkbox **"Custom"** en el toolbar
+- Ingresa el **Width** (ancho) y **Height** (alto) de tu dispositivo
+- Ejemplo: Para un Xiaomi Redmi Note 12 (393×851), ingresa:
+  - Width: `393`
+  - Height: `851`
+- Las coordenadas se calcularán con escala 1:1
+- **Útil para:** Dispositivos no listados, tablets, o resoluciones específicas
+
+### 3. Recortar (Opcional)
 - Haz clic en **"Recortar"**
 - Selecciona el área deseada
 - Confirma o cancela el recorte
 
-### 3. Capturar Coordenadas
+### 4. Capturar Coordenadas
 - Haz clic en cualquier punto de la imagen
 - Las coordenadas se agregarán automáticamente a la lista
 - El formato generado es compatible con Appium: `clickPantalla = driver.tap([(x, y)], 100)`
 
-### 4. Gestionar Coordenadas
+### 5. Gestionar Coordenadas
 - **Copiar Individual**: Haz clic en cualquier coordenada de la lista
 - **Copiar Todo**: Usa el botón "Copiar Todo" para copiar todas las coordenadas
 - **Limpiar**: Elimina todas las coordenadas con el botón "Limpiar Todo"
 
-### 5. Probar Coordenadas
+### 6. Probar Coordenadas
 - Ingresa valores X e Y en la sección "Probar Coordenada"
 - Haz clic en **"Probar Coordenada"**
 - Un marcador rojo aparecerá en la posición exacta durante 3 segundos
@@ -97,29 +134,44 @@ src/
 
 ## 🎯 Configuración de Dispositivos
 
-La aplicación soporta **24 modelos de iPhone** con sus resoluciones lógicas correctas:
+La aplicación soporta **28 dispositivos móviles** con sus resoluciones lógicas correctas:
 
-### Dispositivos Soportados
+### 🍎 iPhone (24 modelos)
 
 | Modelo | Resolución | Scale Factor | Tamaño |
 |--------|------------|--------------|--------|
-| iPhone SE/8 | 375×667 | @2x | 4.7" |
-| iPhone 8 Plus | 414×736 | @3x | 5.5" |
-| iPhone X/11 Pro | 375×812 | @3x | 5.8" |
-| iPhone 11 | 414×896 | @2x | 6.1" |
-| iPhone 12 Mini | 375×812 | @3x | 5.4" |
-| iPhone 12/13 | 390×844 | @3x | 6.1" |
-| iPhone 14 Pro | 393×852 | @3x | 6.1" |
-| iPhone 15 Pro Max | 430×932 | @3x | 6.7" |
-| iPhone 16 Pro Max | 440×956 | @3x | 6.9" |
+| iPhone SE/8 | 375×667 pt | @2x | 4.7" |
+| iPhone 8 Plus | 414×736 pt | @3x | 5.5" |
+| iPhone X/11 Pro | 375×812 pt | @3x | 5.8" |
+| iPhone 11 | 414×896 pt | @2x | 6.1" |
+| iPhone 12 Mini | 375×812 pt | @3x | 5.4" |
+| iPhone 12/13 | 390×844 pt | @3x | 6.1" |
+| iPhone 14 Pro | 393×852 pt | @3x | 6.1" |
+| iPhone 15 Pro Max | 430×932 pt | @3x | 6.7" |
+| iPhone 16 Pro Max | 440×956 pt | @3x | 6.9" |
 
-**Dispositivo por defecto:** iPhone 12 (390×844 @3x)
+Ver `IPHONE_RESOLUTIONS.md` para la lista completa de todos los modelos iPhone.
 
-Ver `IPHONE_RESOLUTIONS.md` para la lista completa de todos los modelos y especificaciones técnicas detalladas.
+### 📱 Samsung Galaxy (4 modelos)
+
+| Modelo | Resolución Física (px) | Scale Factor | Tamaño |
+|--------|------------------------|--------------|--------|
+| Galaxy A54 | 1080×2340 px | 1.0x | 6.4" |
+| Galaxy A55 | 1080×2340 px | 1.0x | 6.6" |
+| Galaxy A56 | 1080×2340 px | 1.0x | 6.7" |
+| Galaxy S20 | 1440×3200 px | 1.0x | 6.2" |
+
+**Nota:** Samsung/Android usa **resolución física** (pixels) en Appium, no resolución lógica (DP).
+
+Ver `SAMSUNG_RESOLUTIONS.md` para especificaciones técnicas detalladas de Samsung.
 
 ### Cambiar Dispositivo
 
-Usa el selector de dispositivos en la barra de herramientas para cambiar entre diferentes modelos de iPhone. Las coordenadas se calcularán automáticamente según el scale factor del dispositivo seleccionado.
+1. **Selecciona la marca** usando los tabs 🍎 iPhone o 📱 Samsung
+2. **Elige el modelo** del dropdown que aparece
+3. Las coordenadas se calcularán automáticamente según el dispositivo seleccionado
+
+**Dispositivo por defecto:** iPhone 12 (390×844 @3x)
 
 ## 🛠️ Tecnologías
 

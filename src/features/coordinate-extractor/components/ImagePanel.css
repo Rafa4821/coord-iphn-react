@@ -4,4 +4,99 @@
   height: 100%;
   padding: 20px;
   gap: 20px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.image-panel.dragging {
+  background-color: rgba(13, 110, 253, 0.05);
+  border: 2px dashed var(--primary-color);
+  border-radius: 8px;
+}
+
+/* Drag and Drop Overlay */
+.drag-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(13, 110, 253, 0.9);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  border-radius: 8px;
+  animation: fadeIn 0.2s ease;
+}
+
+.drag-overlay-content {
+  text-align: center;
+  color: white;
+  animation: scaleIn 0.3s ease;
+}
+
+.drag-icon {
+  font-size: 80px;
+  margin-bottom: 20px;
+  animation: bounce 1s infinite;
+}
+
+.drag-text {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Dark mode */
+[data-theme="dark"] .image-panel.dragging {
+  background-color: rgba(13, 110, 253, 0.1);
+  border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .drag-overlay {
+  background: rgba(13, 110, 253, 0.95);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .drag-icon {
+    font-size: 60px;
+  }
+  
+  .drag-text {
+    font-size: 18px;
+  }
 }

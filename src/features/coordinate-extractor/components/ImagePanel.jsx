@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Cropper } from 'react-cropper'
 import Toolbar from './Toolbar'
 import ImageContainer from './ImageContainer'
@@ -17,15 +17,24 @@ function ImagePanel({
   setCurrentDevice,
   isGestureMode,
   setIsGestureMode,
-  imageRef 
+  imageRef,
+  selectedBrand,
+  onBrandChange,
+  customWidth,
+  customHeight,
+  onCustomWidthChange,
+  onCustomHeightChange,
+  isCustomMode,
+  onCustomModeToggle
 }) {
   const [liveCoords, setLiveCoords] = useState({ x: '--', y: '--' })
   const [croppedImage, setCroppedImage] = useState(null)
+  const [isDragging, setIsDragging] = useState(false)
   const cropperRef = useRef(null)
+  const imagePanelRef = useRef(null)
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0]
-    if (!file) return
+  const loadImageFromFile = (file) => {
+    if (!file || !file.type.startsWith('image/')) return
 
     const reader = new FileReader()
     reader.onload = (event) => {
@@ -35,6 +44,69 @@ function ImagePanel({
       setIsGestureMode(false)
     }
     reader.readAsDataURL(file)
+  }
+
+  const handleClearImage = () => {
+    onImageLoad(null)
+    setCroppedImage(null)
+    setIsCropping(false)
+    setIsGestureMode(false)
+  }
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0]
+    loadImageFromFile(file)
+  }
+
+  // Paste from clipboard
+  useEffect(() => {
+    const handlePaste = (e) => {
+      const items = e.clipboardData?.items
+      if (!items) return
+
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+          const file = items[i].getAsFile()
+          loadImageFromFile(file)
+          e.preventDefault()
+          break
+        }
+      }
+    }
+
+    window.addEventListener('paste', handlePaste)
+    return () => window.removeEventListener('paste', handlePaste)
+  }, [onImageLoad])
+
+  // Drag and drop handlers
+  const handleDragEnter = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.target === imagePanelRef.current) {
+      setIsDragging(false)
+    }
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  const handleDrop = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+
+    const files = e.dataTransfer?.files
+    if (files && files.length > 0) {
+      loadImageFromFile(files[0])
+    }
   }
 
   const handleStartCrop = () => {
@@ -70,7 +142,14 @@ function ImagePanel({
   const gestureSimulatorRef = useRef(null)
 
   return (
-    <div className="image-panel">
+    <div 
+      ref={imagePanelRef}
+      className={`image-panel ${isDragging ? 'dragging' : ''}`}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
       <Toolbar
         onImageUpload={handleImageUpload}
         onStartCrop={handleStartCrop}
@@ -82,6 +161,15 @@ function ImagePanel({
         onDeviceChange={setCurrentDevice}
         onGestureToggle={handleGestureToggle}
         isGestureMode={isGestureMode}
+        selectedBrand={selectedBrand}
+        onBrandChange={onBrandChange}
+        customWidth={customWidth}
+        customHeight={customHeight}
+        onCustomWidthChange={onCustomWidthChange}
+        onCustomHeightChange={onCustomHeightChange}
+        isCustomMode={isCustomMode}
+        onCustomModeToggle={onCustomModeToggle}
+        onClearImage={handleClearImage}
       />
       
       <ImageContainer
@@ -108,6 +196,15 @@ function ImagePanel({
       )}
       
       <StatusBar coords={liveCoords} />
+      
+      {isDragging && (
+        <div className="drag-overlay">
+          <div className="drag-overlay-content">
+            <div className="drag-icon">📁</div>
+            <p className="drag-text">Suelta la imagen aquí</p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

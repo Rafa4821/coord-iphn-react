@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { Button, ButtonGroup, Form } from 'react-bootstrap'
-import { Upload, Crop, Check, X, Moon, Sun, Hand } from 'lucide-react'
+import { Upload, Crop, Check, X, Moon, Sun, Hand, Trash2 } from 'lucide-react'
 import { useTheme } from '../../../context/ThemeContext'
-import { DEVICE_CONFIGS } from '../constants/deviceConfig'
+import { DEVICE_CONFIGS, BRANDS, DEVICES_BY_BRAND } from '../constants/deviceConfig'
+import BrandSelector from './BrandSelector'
 import './Toolbar.css'
 
 function Toolbar({ 
@@ -14,9 +16,21 @@ function Toolbar({
   currentDevice,
   onDeviceChange,
   onGestureToggle,
-  isGestureMode
+  isGestureMode,
+  selectedBrand,
+  onBrandChange,
+  customWidth,
+  customHeight,
+  onCustomWidthChange,
+  onCustomHeightChange,
+  isCustomMode,
+  onCustomModeToggle,
+  onClearImage
 }) {
   const { isDarkMode, toggleTheme } = useTheme()
+  
+  // Filter devices by selected brand
+  const availableDevices = DEVICES_BY_BRAND[selectedBrand] || {}
 
   return (
     <div className="toolbar">
@@ -49,6 +63,14 @@ function Toolbar({
               <Hand size={18} className="me-2" />
               Gestos
             </Button>
+            <Button 
+              variant="danger" 
+              onClick={onClearImage}
+              title="Borrar Imagen"
+            >
+              <Trash2 size={18} className="me-2" />
+              Borrar
+            </Button>
           </>
         )}
 
@@ -65,17 +87,61 @@ function Toolbar({
           </ButtonGroup>
         )}
 
+        <BrandSelector 
+          selectedBrand={selectedBrand}
+          onBrandChange={onBrandChange}
+          brands={BRANDS}
+        />
+
         <Form.Select 
           value={currentDevice.id} 
           onChange={(e) => onDeviceChange(DEVICE_CONFIGS[e.target.value])}
           className="device-selector"
+          disabled={isCustomMode}
         >
-          {Object.values(DEVICE_CONFIGS).map(device => (
+          {Object.values(availableDevices).map(device => (
             <option key={device.id} value={device.id}>
               {device.name}
             </option>
           ))}
         </Form.Select>
+
+        <div className="custom-resolution-container">
+          <Form.Check
+            type="checkbox"
+            id="custom-mode-toggle"
+            label="Custom"
+            checked={isCustomMode}
+            onChange={onCustomModeToggle}
+            className="custom-mode-checkbox"
+          />
+          
+          {isCustomMode && (
+            <div className="custom-inputs">
+              <div className="custom-input-group">
+                <Form.Control
+                  type="number"
+                  placeholder="Width"
+                  value={customWidth}
+                  onChange={(e) => onCustomWidthChange(e.target.value)}
+                  className="custom-input"
+                  min="1"
+                  max="9999"
+                />
+                <span className="input-separator">×</span>
+                <Form.Control
+                  type="number"
+                  placeholder="Height"
+                  value={customHeight}
+                  onChange={(e) => onCustomHeightChange(e.target.value)}
+                  className="custom-input"
+                  min="1"
+                  max="9999"
+                />
+              </div>
+            </div>
+          )}
+        </div>
 
         <Button 
           variant={isDarkMode ? 'light' : 'dark'} 

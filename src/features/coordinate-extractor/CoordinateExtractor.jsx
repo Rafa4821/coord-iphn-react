@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import ImagePanel from './components/ImagePanel'
 import CoordinatesPanel from './components/CoordinatesPanel'
-import { DEFAULT_DEVICE } from './constants/deviceConfig'
+import { DEFAULT_DEVICE, DEFAULT_BRAND, DEVICES_BY_BRAND } from './constants/deviceConfig'
 import './CoordinateExtractor.css'
 
 function CoordinateExtractor() {
@@ -11,16 +11,63 @@ function CoordinateExtractor() {
   const [isCropping, setIsCropping] = useState(false)
   const [currentDevice, setCurrentDevice] = useState(DEFAULT_DEVICE)
   const [isGestureMode, setIsGestureMode] = useState(false)
+  const [selectedBrand, setSelectedBrand] = useState(DEFAULT_BRAND)
+  const [isCustomMode, setIsCustomMode] = useState(false)
+  const [customWidth, setCustomWidth] = useState('')
+  const [customHeight, setCustomHeight] = useState('')
   const imageRef = useRef(null)
+
+  // Handle brand change
+  const handleBrandChange = (newBrand) => {
+    setSelectedBrand(newBrand)
+    setIsCustomMode(false) // Reset custom mode when changing brand
+    // Set first device of the new brand as current
+    const devicesOfBrand = DEVICES_BY_BRAND[newBrand]
+    const firstDevice = Object.values(devicesOfBrand)[0]
+    if (firstDevice) {
+      setCurrentDevice(firstDevice)
+    }
+  }
+
+  // Handle custom mode toggle
+  const handleCustomModeToggle = () => {
+    setIsCustomMode(!isCustomMode)
+    if (!isCustomMode) {
+      // Initialize with current device values when enabling custom mode
+      setCustomWidth(currentDevice.width.toString())
+      setCustomHeight(currentDevice.height.toString())
+    }
+  }
+
+  // Get effective device (custom or selected)
+  const getEffectiveDevice = () => {
+    if (isCustomMode && customWidth && customHeight) {
+      return {
+        id: 'CUSTOM',
+        name: 'Custom Device',
+        width: parseInt(customWidth) || 1,
+        height: parseInt(customHeight) || 1,
+        scaleFactor: 1, // For custom, we use 1:1 ratio
+        description: `Custom (${customWidth}×${customHeight})`,
+        brand: 'custom',
+        isCustom: true
+      }
+    }
+    return currentDevice
+  }
+
+  const effectiveDevice = getEffectiveDevice()
 
   const handleImageLoad = (imageData) => {
     setImage(imageData)
+    // Limpiar coordenadas siempre que se carga una nueva imagen o se borra
     setCoordinates([])
   }
 
   const handleCoordinateCapture = (coord) => {
-    const logicalX = Math.round(coord.originalX / currentDevice.scaleFactor)
-    const logicalY = Math.round(coord.originalY / currentDevice.scaleFactor)
+    const device = getEffectiveDevice()
+    const logicalX = Math.round(coord.originalX / device.scaleFactor)
+    const logicalY = Math.round(coord.originalY / device.scaleFactor)
     const coordText = `clickPantalla = driver.tap([(${logicalX}, ${logicalY})], 100)`
     
     setCoordinates(prev => [...prev, {
@@ -65,11 +112,19 @@ function CoordinateExtractor() {
             onGestureCapture={handleGestureCapture}
             isCropping={isCropping}
             setIsCropping={setIsCropping}
-            currentDevice={currentDevice}
+            currentDevice={effectiveDevice}
             setCurrentDevice={setCurrentDevice}
             isGestureMode={isGestureMode}
             setIsGestureMode={setIsGestureMode}
             imageRef={imageRef}
+            selectedBrand={selectedBrand}
+            onBrandChange={handleBrandChange}
+            customWidth={customWidth}
+            customHeight={customHeight}
+            onCustomWidthChange={setCustomWidth}
+            onCustomHeightChange={setCustomHeight}
+            isCustomMode={isCustomMode}
+            onCustomModeToggle={handleCustomModeToggle}
           />
         </Col>
         <Col lg={3} md={4} className="coordinates-panel-col">
@@ -79,7 +134,7 @@ function CoordinateExtractor() {
             onCopyAll={handleCopyAll}
             image={image}
             imageRef={imageRef}
-            currentDevice={currentDevice}
+            currentDevice={effectiveDevice}
           />
         </Col>
       </Row>

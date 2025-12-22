@@ -1,4 +1,11 @@
-export const DEVICE_CONFIGS = {
+// Brands configuration
+export const BRANDS = {
+  IPHONE: 'iphone',
+  SAMSUNG: 'samsung'
+}
+
+// iPhone devices
+const IPHONE_DEVICES = {
   // iPhone SE (1st, 2nd, 3rd gen) - Same as iPhone 6/7/8
   IPHONE_SE: {
     id: 'IPHONE_SE',
@@ -241,8 +248,83 @@ export const DEVICE_CONFIGS = {
     width: 440,
     height: 956,
     scaleFactor: 3,
-    description: 'iPhone 16 Pro Max (440x956 @3x)'
+    description: 'iPhone 16 Pro Max (440x956 @3x)',
+    brand: BRANDS.IPHONE
   }
 }
 
+// Samsung devices - Using PHYSICAL resolution (pixels) for Appium
+const SAMSUNG_DEVICES = {
+  // Samsung Galaxy A54 - 6.4" display
+  GALAXY_A54: {
+    id: 'GALAXY_A54',
+    name: 'Galaxy A54',
+    width: 1080,
+    height: 2340,
+    scaleFactor: 1,
+    description: 'Galaxy A54 (1080x2340 px)',
+    brand: BRANDS.SAMSUNG,
+    logicalResolution: { width: 360, height: 780 },
+    density: 403
+  },
+  
+  // Samsung Galaxy A55 - 6.6" display
+  GALAXY_A55: {
+    id: 'GALAXY_A55',
+    name: 'Galaxy A55',
+    width: 1080,
+    height: 2340,
+    scaleFactor: 1,
+    description: 'Galaxy A55 (1080x2340 px)',
+    brand: BRANDS.SAMSUNG,
+    logicalResolution: { width: 360, height: 780 },
+    density: 393
+  },
+  
+  // Samsung Galaxy A56 - 6.7" display
+  GALAXY_A56: {
+    id: 'GALAXY_A56',
+    name: 'Galaxy A56',
+    width: 1080,
+    height: 2340,
+    scaleFactor: 1,
+    description: 'Galaxy A56 (1080x2340 px)',
+    brand: BRANDS.SAMSUNG,
+    logicalResolution: { width: 360, height: 780 },
+    density: 385
+  },
+  
+  // Samsung Galaxy S20 - 6.2" display
+  GALAXY_S20: {
+    id: 'GALAXY_S20',
+    name: 'Galaxy S20',
+    width: 1440,
+    height: 3200,
+    scaleFactor: 1,
+    description: 'Galaxy S20 (1440x3200 px)',
+    brand: BRANDS.SAMSUNG,
+    logicalResolution: { width: 360, height: 800 },
+    density: 563
+  }
+}
+
+// Add brand property to all iPhone devices
+Object.keys(IPHONE_DEVICES).forEach(key => {
+  IPHONE_DEVICES[key].brand = BRANDS.IPHONE
+})
+
+// Combined device configs
+export const DEVICE_CONFIGS = {
+  ...IPHONE_DEVICES,
+  ...SAMSUNG_DEVICES
+}
+
+// Devices by brand
+export const DEVICES_BY_BRAND = {
+  [BRANDS.IPHONE]: IPHONE_DEVICES,
+  [BRANDS.SAMSUNG]: SAMSUNG_DEVICES
+}
+
+// Default devices
 export const DEFAULT_DEVICE = DEVICE_CONFIGS.IPHONE_12
+export const DEFAULT_BRAND = BRANDS.IPHONE

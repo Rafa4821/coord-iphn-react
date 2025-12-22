@@ -96,8 +96,23 @@ function ImageContainer({
   return (
     <div className="image-container" ref={containerRef}>
       {!image && (
-        <div className="placeholder-text">
-          <p className="text-muted fs-5">Carga una imagen para empezar</p>
+        <div className="empty-state">
+          <div className="empty-state-icon">📱</div>
+          <h3 className="empty-state-title">Carga una Imagen</h3>
+          <div className="empty-state-options">
+            <div className="option-item">
+              <span className="option-icon">📁</span>
+              <span className="option-text">Haz clic en "Cargar Imagen"</span>
+            </div>
+            <div className="option-item">
+              <span className="option-icon">🖱️</span>
+              <span className="option-text">Arrastra y suelta una imagen</span>
+            </div>
+            <div className="option-item">
+              <span className="option-icon">📋</span>
+              <span className="option-text">Pega desde el portapapeles (Ctrl+V)</span>
+            </div>
+          </div>
         </div>
       )}
 
