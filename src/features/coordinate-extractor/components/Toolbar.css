@@ -1,15 +1,38 @@
 .toolbar {
-  background-color: var(--bg-secondary);
-  border-radius: 10px;
-  padding: 15px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  background: linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary));
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-md);
+  backdrop-filter: blur(10px);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.toolbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--primary-color) 50%, 
+    transparent 100%
+  );
+  opacity: 0.5;
+}
+
+.toolbar:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-1px);
 }
 
 .toolbar-content {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -18,12 +41,37 @@
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  transition: all 0.2s;
+  transition: all var(--transition-base);
+  border-radius: var(--radius-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.custom-file-upload::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.custom-file-upload:hover::before {
+  width: 300px;
+  height: 300px;
 }
 
 .custom-file-upload:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.custom-file-upload:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .device-selector {

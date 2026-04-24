@@ -1,6 +1,7 @@
-import { useState, forwardRef, useImperativeHandle } from 'react'
+import { useState, forwardRef, useImperativeHandle, useEffect, useRef } from 'react'
 import { Button, ButtonGroup, Form, InputGroup, Badge } from 'react-bootstrap'
 import { Hand, Zap, X } from 'lucide-react'
+import { useToast } from '../../../components/Toast/ToastContainer'
 import './GestureSimulator.css'
 
 const GestureSimulator = forwardRef(({ 
@@ -10,12 +11,27 @@ const GestureSimulator = forwardRef(({
   imageRef,
   currentDevice 
 }, ref) => {
+  const toast = useToast()
   const [gestureType, setGestureType] = useState('swipe')
   const [startPoint, setStartPoint] = useState(null)
   const [endPoint, setEndPoint] = useState(null)
   const [duration, setDuration] = useState(500)
   const [isCapturingStart, setIsCapturingStart] = useState(false)
   const [isCapturingEnd, setIsCapturingEnd] = useState(false)
+  const previousDuration = useRef(500)
+
+  // Preservar duración cuando cambias entre swipe/flick
+  useEffect(() => {
+    if (gestureType === 'swipe') {
+      // Restaurar la duración anterior
+      setDuration(previousDuration.current)
+    } else {
+      // Guardar la duración actual antes de cambiar a flick
+      if (duration !== '' && !isNaN(duration)) {
+        previousDuration.current = duration
+      }
+    }
+  }, [gestureType])
 
   const handleImageClick = (e) => {
     if (!imageRef.current) return
@@ -70,7 +86,7 @@ const GestureSimulator = forwardRef(({
 
   const handleGenerate = () => {
     if (!startPoint || !endPoint) {
-      alert('Por favor captura ambos puntos (inicio y final)')
+      toast.warning('Por favor captura ambos puntos (inicio y final)')
       return
     }
 
@@ -86,6 +102,8 @@ const GestureSimulator = forwardRef(({
       code: gestureCode
     })
 
+    toast.success(`Gesto ${gestureType === 'swipe' ? 'Swipe' : 'Flick'} generado correctamente`)
+    
     setStartPoint(null)
     setEndPoint(null)
   }
@@ -204,20 +222,23 @@ const GestureSimulator = forwardRef(({
                   if (val === '') {
                     setDuration('')
                   } else {
-                    const num = parseInt(val)
-                    if (!isNaN(num)) {
+                    const num = parseInt(val, 10)
+                    if (!isNaN(num) && num >= 0) {
                       setDuration(num)
+                      previousDuration.current = num
                     }
                   }
                 }}
                 onBlur={(e) => {
-                  if (e.target.value === '' || parseInt(e.target.value) < 100) {
+                  const val = e.target.value
+                  if (val === '' || isNaN(parseInt(val, 10))) {
                     setDuration(500)
+                    previousDuration.current = 500
                   }
                 }}
-                min="100"
-                max="5000"
+                min="0"
                 step="100"
+                placeholder="500"
               />
             </Form.Group>
           )}

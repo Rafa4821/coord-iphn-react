@@ -2,6 +2,7 @@
   height: 100vh;
   padding: 0;
   max-width: 100%;
+  background: linear-gradient(to bottom, var(--bg-secondary), var(--bg-tertiary));
 }
 
 .coordinate-extractor .row {
@@ -11,11 +12,27 @@
 
 .image-panel-col {
   background-color: var(--bg-primary);
-  border-right: 1px solid var(--border-color);
+  border-right: 2px solid var(--border-light);
   padding: 0;
   height: 100vh;
   overflow: hidden;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition: background-color var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+  position: relative;
+}
+
+.image-panel-col::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -2px;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, 
+    transparent 0%, 
+    var(--primary-color) 50%, 
+    transparent 100%
+  );
+  opacity: 0.3;
 }
 
 .coordinates-panel-col {
@@ -23,7 +40,10 @@
   padding: 0;
   height: 100vh;
   overflow: hidden;
-  transition: background-color 0.3s ease;
+  transition: background-color var(--transition-base);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  z-index: 10;
 }
 
 @media (max-width: 768px) {
@@ -31,7 +51,22 @@
     flex-direction: column;
   }
   
-  .image-panel-col,
+  .image-panel-col {
+    border-right: none;
+    border-bottom: 2px solid var(--border-light);
+    height: 50vh;
+  }
+  
+  .image-panel-col::after {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, 
+      transparent 0%, 
+      var(--primary-color) 50%, 
+      transparent 100%
+    );
+  }
+  
   .coordinates-panel-col {
     height: 50vh;
   }

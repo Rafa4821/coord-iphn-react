@@ -1,19 +1,33 @@
 .coordinate-list-container {
   flex: 1;
   background-color: var(--bg-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
   overflow-y: auto;
+  overflow-x: hidden;
   min-height: 0;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+}
+
+.coordinate-list-container:hover {
+  box-shadow: var(--shadow-lg);
 }
 
 .empty-state {
-  padding: 40px 20px;
+  padding: 60px 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin: 0;
 }
 
 .coordinate-list {
@@ -22,19 +36,52 @@
 
 .coordinate-item {
   cursor: pointer;
-  transition: all 0.2s;
-  padding: 12px 15px;
+  transition: all var(--transition-base);
+  padding: 14px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  border-bottom: 1px solid var(--border-color) !important;
+  gap: 12px;
+  border-bottom: 1px solid var(--border-light) !important;
   background-color: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+  animation: slideInCoordinate 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.coordinate-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--primary-color), var(--primary-light));
+  transform: scaleY(0);
+  transition: transform var(--transition-base);
+}
+
+.coordinate-item:hover::before {
+  transform: scaleY(1);
 }
 
 .coordinate-item:hover {
-  background-color: var(--bg-tertiary) !important;
-  transform: translateX(2px);
+  background: linear-gradient(to right, 
+    var(--bg-secondary) 0%, 
+    var(--bg-tertiary) 100%) !important;
+  transform: translateX(4px);
+  box-shadow: var(--shadow-sm);
+}
+
+@keyframes slideInCoordinate {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .dark-mode .coordinate-item {
@@ -63,21 +110,46 @@
 }
 
 .copy-icon {
-  color: #6c757d;
+  color: var(--text-secondary);
   flex-shrink: 0;
-  transition: color 0.2s;
+  transition: all var(--transition-base);
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+}
+
+.copy-icon:hover {
+  background: var(--bg-tertiary);
+  color: var(--primary-color);
+  transform: scale(1.1) rotate(5deg);
+}
+
+.copy-icon:active {
+  animation: copyBounce 0.4s ease;
+}
+
+@keyframes copyBounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(0.9) rotate(-5deg);
+  }
+  75% {
+    transform: scale(1.15) rotate(5deg);
+  }
 }
 
 .dark-mode .copy-icon {
-  color: #a0aec0;
+  color: var(--text-secondary);
 }
 
 .coordinate-item:hover .copy-icon {
-  color: #0d6efd;
+  color: var(--primary-color);
 }
 
 .dark-mode .coordinate-item:hover .copy-icon {
-  color: #63b3ed;
+  color: var(--primary-light);
 }
 
 .copy-notification {
@@ -118,32 +190,33 @@
   }
 }
 
-::-webkit-scrollbar {
-  width: 8px;
+/* Scrollbar moderno */
+.coordinate-list-container::-webkit-scrollbar {
+  width: 10px;
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
+.coordinate-list-container::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 4px 0;
 }
 
-.dark-mode ::-webkit-scrollbar-track {
-  background: #2d3748;
+.coordinate-list-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--primary-color), var(--primary-light));
+  border-radius: 10px;
+  border: 2px solid var(--bg-primary);
+  transition: background var(--transition-base);
 }
 
-::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 4px;
+.coordinate-list-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, var(--primary-dark), var(--primary-color));
+  border-width: 1px;
 }
 
-.dark-mode ::-webkit-scrollbar-thumb {
-  background: #4a5568;
+.dark-mode .coordinate-list-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--primary-color), var(--primary-dark));
+  border-color: var(--bg-secondary);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
-.dark-mode ::-webkit-scrollbar-thumb:hover {
-  background: #718096;
+.dark-mode .coordinate-list-container::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, var(--primary-light), var(--primary-color));
 }

@@ -1,22 +1,15 @@
 import { ListGroup } from 'react-bootstrap'
 import { Copy } from 'lucide-react'
+import { useToast } from '../../../components/Toast/ToastContainer'
 import './CoordinateList.css'
 
 function CoordinateList({ coordinates }) {
+  const toast = useToast()
+  
   const handleCopyIndividual = (text) => {
     navigator.clipboard.writeText(text)
-      .then(() => {
-        const notification = document.createElement('div')
-        notification.className = 'copy-notification'
-        notification.textContent = '¡Copiado!'
-        document.body.appendChild(notification)
-        
-        setTimeout(() => {
-          notification.classList.add('fade-out')
-          setTimeout(() => notification.remove(), 300)
-        }, 1500)
-      })
-      .catch(() => alert('Error al copiar'))
+      .then(() => toast.success('¡Coordenada copiada!', 2000))
+      .catch(() => toast.error('Error al copiar'))
   }
 
   return (

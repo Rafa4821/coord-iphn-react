@@ -80,12 +80,20 @@ function ImagePanel({
 
   // Drag and drop handlers
   const handleDragEnter = (e) => {
+    // Desactivar drag & drop durante modo gestos o cropping
+    if (isGestureMode || isCropping) {
+      e.preventDefault()
+      return
+    }
+    
     e.preventDefault()
     e.stopPropagation()
     setIsDragging(true)
   }
 
   const handleDragLeave = (e) => {
+    if (isGestureMode || isCropping) return
+    
     e.preventDefault()
     e.stopPropagation()
     if (e.target === imagePanelRef.current) {
@@ -94,11 +102,23 @@ function ImagePanel({
   }
 
   const handleDragOver = (e) => {
+    // Desactivar drag & drop durante modo gestos o cropping
+    if (isGestureMode || isCropping) {
+      e.preventDefault()
+      return
+    }
+    
     e.preventDefault()
     e.stopPropagation()
   }
 
   const handleDrop = (e) => {
+    // Bloquear drop durante modo gestos o cropping
+    if (isGestureMode || isCropping) {
+      e.preventDefault()
+      return
+    }
+    
     e.preventDefault()
     e.stopPropagation()
     setIsDragging(false)

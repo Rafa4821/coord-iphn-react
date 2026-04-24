@@ -3,9 +3,11 @@ import { Container, Row, Col } from 'react-bootstrap'
 import ImagePanel from './components/ImagePanel'
 import CoordinatesPanel from './components/CoordinatesPanel'
 import { DEFAULT_DEVICE, DEFAULT_BRAND, DEVICES_BY_BRAND } from './constants/deviceConfig'
+import { useToast } from '../../components/Toast/ToastContainer'
 import './CoordinateExtractor.css'
 
 function CoordinateExtractor() {
+  const toast = useToast()
   const [image, setImage] = useState(null)
   const [coordinates, setCoordinates] = useState([])
   const [isCropping, setIsCropping] = useState(false)
@@ -97,8 +99,8 @@ function CoordinateExtractor() {
   const handleCopyAll = () => {
     const allText = coordinates.map(c => c.text).join('\n')
     navigator.clipboard.writeText(allText)
-      .then(() => alert('¡Coordenadas copiadas al portapapeles!'))
-      .catch(() => alert('Error al copiar las coordenadas'))
+      .then(() => toast.success('¡Coordenadas copiadas al portapapeles!'))
+      .catch(() => toast.error('Error al copiar las coordenadas'))
   }
 
   return (

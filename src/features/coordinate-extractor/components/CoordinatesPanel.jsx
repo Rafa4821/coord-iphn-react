@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { Button, Form, InputGroup } from 'react-bootstrap'
 import { Trash2, Copy, Target } from 'lucide-react'
 import CoordinateList from './CoordinateList'
+import { useToast } from '../../../components/Toast/ToastContainer'
 import './CoordinatesPanel.css'
 
 function CoordinatesPanel({ coordinates, onClear, onCopyAll, image, imageRef, currentDevice }) {
+  const toast = useToast()
   const [testX, setTestX] = useState('')
   const [testY, setTestY] = useState('')
 
@@ -13,7 +15,7 @@ function CoordinatesPanel({ coordinates, onClear, onCopyAll, image, imageRef, cu
     const y = parseInt(testY, 10)
 
     if (isNaN(x) || isNaN(y) || !image || !imageRef.current) {
-      alert('Por favor ingresa coordenadas válidas y asegúrate de tener una imagen cargada')
+      toast.warning('Por favor ingresa coordenadas válidas y asegúrate de tener una imagen cargada')
       return
     }
 
