@@ -5,25 +5,63 @@
     # Prevenir MIME type sniffing
     Header always set X-Content-Type-Options "nosniff"
     
-    # Prevenir clickjacking
-    Header always set X-Frame-Options "DENY"
+    # Prevenir clickjacking (SAMEORIGIN permite iframe desde mismo origen)
+    Header always set X-Frame-Options "SAMEORIGIN"
     
     # Protección XSS (legacy)
     Header always set X-XSS-Protection "1; mode=block"
     
+    # Prevenir descarga automática en IE
+    Header always set X-Download-Options "noopen"
+    
+    # Política de cross-domain para Adobe Flash/PDF
+    Header always set X-Permitted-Cross-Domain-Policies "none"
+    
     # Política de referrer
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
     
-    # Política de permisos
-    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    # Política de permisos (deshabilitar APIs sensibles)
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+    
+    # HSTS - Forzar HTTPS (1 año)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
     
     # Content Security Policy
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self';"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests;"
+    
+    # CORS - Permitir acceso desde red interna/VPN (ajustar según necesidad)
+    # Descomentar y configurar si hay problemas con VPN corporativa
+    # Header always set Access-Control-Allow-Origin "*"
+    # Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    # Header always set Access-Control-Allow-Headers "Content-Type"
 </IfModule>
 
-# Forzar HTTPS (opcional, descomentar si usas SSL)
-# <IfModule mod_rewrite.c>
-#     RewriteEngine On
-#     RewriteCond %{HTTPS} off
-#     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-# </IfModule>
+# Forzar HTTPS en producción
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Solo redirigir si no está ya en HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP:X-Forwarded-Proto} !https
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    
+    # Configuración para SPA (Single Page Application)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule . /index.html [L]
+</IfModule>
+
+# Compresión GZIP para mejor performance
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Caché de archivos estáticos
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>

@@ -53,7 +53,14 @@ npm install
 npm run dev
 ```
 
-La aplicación estará disponible en `http://localhost:5173`
+La aplicación estará disponible en:
+- **Sin VPN:** `http://localhost:5173`
+- **Con VPN corporativa:** `http://127.0.0.1:5173` ⚠️ IMPORTANTE
+
+> 💡 **Problemas con VPN?**
+> - **Desarrollo local:** Ver `VPN_TROUBLESHOOTING.md`
+> - **Vercel bloqueado:** Ver `VPN_VERCEL_TROUBLESHOOTING.md`
+> - **Solución rápida:** Ver `QUICK_VPN_FIX.md`
 
 ## 📖 Uso
 
@@ -282,6 +289,41 @@ Los colores principales se definen en `src/index.css`:
 ### Estilos de Componentes
 
 Cada componente tiene su propio archivo CSS para facilitar la personalización.
+
+## 🔒 Seguridad
+
+Esta aplicación implementa **9 cabeceras de seguridad HTTP** y **0 vulnerabilidades** detectadas.
+
+### Headers de Seguridad
+✅ X-Content-Type-Options  
+✅ X-Frame-Options: SAMEORIGIN  
+✅ X-XSS-Protection  
+✅ X-Download-Options  
+✅ Strict-Transport-Security (HSTS)  
+✅ Content-Security-Policy  
+✅ Permissions-Policy  
+✅ Referrer-Policy  
+✅ X-Permitted-Cross-Domain-Policies  
+
+### Auditoría
+```bash
+# Verificar vulnerabilidades
+npm audit
+
+# Corregir vulnerabilidades
+npm audit fix
+```
+
+**Documentación completa:** Ver `SECURITY.md`
+
+### Mejoras Recientes (Abril 2026)
+- ✅ 8 vulnerabilidades corregidas
+- ✅ Soporte para VPN corporativa
+- ✅ HTTPS enforcement
+- ✅ Compresión GZIP
+- ✅ Caché optimizado
+
+**Changelog:** Ver `CHANGELOG_SEGURIDAD.md`
 
 ## 🤝 Contribución
 
