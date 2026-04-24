@@ -66,8 +66,8 @@ function CoordinateExtractor() {
 
   const handleCoordinateCapture = (coord) => {
     const device = getEffectiveDevice()
-    const logicalX = Math.round(coord.originalX / device.scaleFactor)
-    const logicalY = Math.round(coord.originalY / device.scaleFactor)
+    const logicalX = Math.round((coord.originalX / coord.imageNaturalWidth) * device.width)
+    const logicalY = Math.round((coord.originalY / coord.imageNaturalHeight) * device.height)
     const coordText = `clickPantalla = driver.tap([(${logicalX}, ${logicalY})], 100)`
     
     setCoordinates(prev => [...prev, {

@@ -41,7 +41,12 @@ function ImageContainer({
     const coords = getOriginalCoordsFromEvent(e, imageRef.current)
     if (!coords) return
 
-    onCoordinateCapture(coords)
+    const imgElement = imageRef.current
+    onCoordinateCapture({
+      ...coords,
+      imageNaturalWidth: imgElement.naturalWidth,
+      imageNaturalHeight: imgElement.naturalHeight
+    })
   }
 
   const handleMouseMove = (e) => {
@@ -53,8 +58,9 @@ function ImageContainer({
       return
     }
 
-    const logicalX = Math.round(coords.originalX / currentDevice.scaleFactor)
-    const logicalY = Math.round(coords.originalY / currentDevice.scaleFactor)
+    const imgElement = imageRef.current
+    const logicalX = Math.round((coords.originalX / imgElement.naturalWidth) * currentDevice.width)
+    const logicalY = Math.round((coords.originalY / imgElement.naturalHeight) * currentDevice.height)
     setLiveCoords({ x: logicalX, y: logicalY })
   }
 

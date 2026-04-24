@@ -37,8 +37,9 @@ const GestureSimulator = forwardRef(({
     const originalX = imageX * ratio
     const originalY = imageY * ratio
 
-    const logicalX = Math.round(originalX / currentDevice.scaleFactor)
-    const logicalY = Math.round(originalY / currentDevice.scaleFactor)
+    const imgElement = imageRef.current
+    const logicalX = Math.round((originalX / imgElement.naturalWidth) * currentDevice.width)
+    const logicalY = Math.round((originalY / imgElement.naturalHeight) * currentDevice.height)
 
     if (isCapturingStart) {
       setStartPoint({ 

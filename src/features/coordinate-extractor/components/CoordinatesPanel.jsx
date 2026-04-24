@@ -21,14 +21,12 @@ function CoordinatesPanel({ coordinates, onClear, onCopyAll, image, imageRef, cu
     const rect = imgElement.getBoundingClientRect()
     
     // Proceso inverso exacto de captura:
-    // Captura: imageX * (naturalWidth / clientWidth) / scaleFactor = logicalX
-    // Prueba: logicalX * scaleFactor / (naturalWidth / clientWidth) = imageX
-    
-    const scaleFactor = currentDevice.scaleFactor
+    // Captura: (originalX / naturalWidth) * deviceWidth = logicalX
+    // Prueba: (logicalX / deviceWidth) * naturalWidth = originalX
     
     // 1. Lógicas → Originales (coordenadas en imagen original)
-    const originalX = x * scaleFactor
-    const originalY = y * scaleFactor
+    const originalX = (x / currentDevice.width) * imgElement.naturalWidth
+    const originalY = (y / currentDevice.height) * imgElement.naturalHeight
     
     // 2. Originales → Display (coordenadas en imagen mostrada)
     const scaleRatio = imgElement.clientWidth / imgElement.naturalWidth
